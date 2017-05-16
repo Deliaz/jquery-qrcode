@@ -1,7 +1,16 @@
-(function (vendor_qrcode) {
+// `qrcode` is the single public function defined by the `QR Code Generator`
+// @include "../vendor/qrcode.js"
+// @include "../vendor/qrcode_UTF8.js"
+(function (root, factory) {
+    if (typeof define === 'function' && define.amd) {
+        define([], factory(root));
+    } else if (typeof exports === 'object') {
+        module.exports = factory(root);
+    } else {
+        root.inttodate = factory(root);
+    }
+})(typeof global !== 'undefined' ? global : this.window || this.global, function (root) {
     'use strict';
-
-    var jq = window.jQuery;
 
     // Check if canvas is available in the browser (as Modernizr does)
     var hasCanvas = (function () {
@@ -13,7 +22,7 @@
     function createQRCode(text, level, version, quiet) {
         var qr = {};
 
-        var vqr = vendor_qrcode(version, level);
+        var vqr = qrcode(version, level);
         vqr.addData(text);
         vqr.make();
 
@@ -64,7 +73,8 @@
         for (var version = minVersion; version <= maxVersion; version += 1) {
             try {
                 return createQRCode(text, level, version, quiet);
-            } catch (err) {/* empty */}
+            } catch (err) {/* empty */
+            }
         }
         return undefined;
     }
@@ -72,7 +82,7 @@
     function drawBackgroundLabel(qr, context, settings) {
         var size = settings.size;
         var font = 'bold ' + settings.mSize * size + 'px ' + settings.fontname;
-        var ctx = jq('<canvas/>')[0].getContext('2d');
+        var ctx = document.createElement('canvas').getContext('2d');
 
         ctx.font = font;
 
@@ -122,7 +132,7 @@
     }
 
     function drawBackground(qr, context, settings) {
-        if (jq(settings.background).is('img')) {
+        if (settings.background && settings.background.matches('img')) {
             context.drawImage(settings.background, 0, 0, settings.size, settings.size);
         } else if (settings.background) {
             context.fillStyle = settings.background;
@@ -256,7 +266,7 @@
                 fn(qr, context, settings, l, t, w, row, col);
             }
         }
-        if (jq(settings.fill).is('img')) {
+        if (settings.fill && settings.fill.matches && settings.fill.matches('img')) {
             context.strokeStyle = 'rgba(0,0,0,0.5)';
             context.lineWidth = 2;
             context.stroke();
@@ -281,24 +291,28 @@
             return null;
         }
 
-        var $canvas = jq(canvas).data('qrcode', qr);
-        var context = $canvas[0].getContext('2d');
+        canvas.dataset['qrcode'] = qr;
+        var context = canvas.getContext('2d');
 
         drawBackground(qr, context, settings);
         drawModules(qr, context, settings);
 
-        return $canvas;
+        return canvas;
     }
 
     // Returns a `canvas` element representing the QR code for the given settings.
     function createCanvas(settings) {
-        var $canvas = jq('<canvas/>').attr('width', settings.size).attr('height', settings.size);
-        return drawOnCanvas($canvas, settings);
+        var canvas = document.createElement('canvas');
+        canvas.setAttribute('width', settings.size);
+        canvas.setAttribute('height', settings.size);
+
+        return drawOnCanvas(canvas, settings);
     }
 
     // Returns an `image` element representing the QR code for the given settings.
     function createImage(settings) {
-        return jq('<img/>').attr('src', createCanvas(settings)[0].toDataURL('image/png'));
+        var img = document.createElement('img');
+        img.setAttribute('src', createCanvas(settings).toDataURL('image/png'));
     }
 
     // Returns a `div` element representing the QR code for the given settings.
@@ -338,27 +352,32 @@
             'background-color': settings.fill
         };
 
-        var $div = jq('<div/>').data('qrcode', qr).css(containerCSS);
+        var div = document.createElement('div').dataset['qrcode'] = qr;
+        Object.keys(containerCSS).forEach(function (key) {
+            div.style[key] = containerCSS[key];
+        });
 
         if (settings_bgColor) {
-            $div.css('background-color', settings_bgColor);
+            div.css('background-color', settings_bgColor);
         }
 
         for (row = 0; row < moduleCount; row += 1) {
             for (col = 0; col < moduleCount; col += 1) {
                 if (qr.isDark(row, col)) {
-                    jq('<div/>')
-                        .css(darkCSS)
-                        .css({
-                            left: offset + col * moduleSize,
-                            top: offset + row * moduleSize
-                        })
-                        .appendTo($div);
+
+                    var innerDiv = document.createElement('div');
+                    Object.keys(darkCSS).forEach(function (key) {
+                        innerDiv.style[key] = darkCSS[key];
+                    });
+                    innerDiv.style.left = offset + col * moduleSize;
+                    innerDiv.style.top = offset + row * moduleSize;
+
+                    div.appendChild(innerDiv);
                 }
             }
         }
 
-        return $div;
+        return div;
     }
 
     function createHTML(settings) {
@@ -428,22 +447,16 @@
         image: null
     };
 
+
     // Register the plugin
     // -------------------
-    jq.fn.qrcode = function (options) {
-        var settings = jq.extend({}, defaults, options);
+    root.qrcode = function (el, options) {
+        var settings = Object.assign({}, defaults, options);
 
-        return this.each(function (idx, el) {
-            if (el.nodeName.toLowerCase() === 'canvas') {
-                drawOnCanvas(el, settings);
-            } else {
-                jq(el).append(createHTML(settings));
-            }
-        });
+        if (el.nodeName.toLowerCase() === 'canvas') {
+            return drawOnCanvas(el, settings);
+        } else {
+            return el.appendChild(createHTML(settings));
+        }
     };
-}(function () {
-    // `qrcode` is the single public function defined by the `QR Code Generator`
-    // @include "../vendor/qrcode.js"
-    // @include "../vendor/qrcode_UTF8.js"
-    return qrcode; // eslint-disable-line no-undef
-}()));
+});
