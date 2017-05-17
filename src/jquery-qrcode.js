@@ -291,7 +291,6 @@
             return null;
         }
 
-        canvas.dataset['qrcode'] = qr;
         var context = canvas.getContext('2d');
 
         drawBackground(qr, context, settings);
@@ -313,6 +312,7 @@
     function createImage(settings) {
         var img = document.createElement('img');
         img.setAttribute('src', createCanvas(settings).toDataURL('image/png'));
+        return img;
     }
 
     // Returns a `div` element representing the QR code for the given settings.
@@ -352,7 +352,6 @@
             'background-color': settings.fill
         };
 
-        var div = document.createElement('div').dataset['qrcode'] = qr;
         Object.keys(containerCSS).forEach(function (key) {
             div.style[key] = containerCSS[key];
         });
@@ -450,7 +449,7 @@
 
     // Register the plugin
     // -------------------
-    root.qrcode = function (el, options) {
+    return function (el, options) {
         var settings = Object.assign({}, defaults, options);
 
         if (el.nodeName.toLowerCase() === 'canvas') {
