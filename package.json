@@ -1,20 +1,17 @@
 {
-  "name": "jquery-qrcode",
-  "displayName": "jQuery.qrcode",
+  "name": "nojquery-qrcode",
+  "displayName": "nojquery-qrcode",
   "version": "0.14.0",
   "description": "Generate QR codes dynamically.",
-  "homepage": "https://larsjung.de/jquery-qrcode/",
-  "bugs": "https://github.com/lrsjng/jquery-qrcode/issues",
-  "author": "Lars Jung <lrsjng@gmail.com> (https://larsjung.de)",
+  "homepage": "https://github.com/Deliaz/jquery-qrcode",
+  "author": "Deliaz",
   "license": "MIT",
   "scripts": {
-    "lint": "eslint .",
-    "build": "node ghu.js release",
-    "precommit": "npm run -s lint && npm run -s build"
+    "build": "node ghu.js release"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/lrsjng/jquery-qrcode.git"
+    "url": "https://github.com/Deliaz/jquery-qrcode"
   },
   "devDependencies": {
     "eslint": "2.10.2",
