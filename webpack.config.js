@@ -3,10 +3,9 @@ const webpack = require('webpack');
 module.exports = {
     context: __dirname + "/",
     entry: "./src",
-    // devtool: 'eval',
     output: {
         path: __dirname + "/dist",
-        filename: "nojquery-qrcode.js",
+        filename: "nojquery-qrcode.min.js",
         libraryTarget: 'umd',
         library: 'qrcode'
     },

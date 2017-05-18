@@ -4,5 +4,4 @@ local
 node_modules
 npm-debug.log
 .idea
-dist
 yarn.lock
