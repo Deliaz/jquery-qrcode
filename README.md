@@ -9,7 +9,7 @@ A fork of [lrsjng/jquery-qrcode](https://github.com/lrsjng/jquery-qrcode) but wi
 1) Does not require jQuery!
 2) Uses webpack for build
 3) Refactored to ES6 module system
-4) Uses [qrcode-generator](qrcode-generator) as a dependency (instead of direct copying)
+4) Uses [qrcode-generator](https://github.com/kazuhikoarase/qrcode-generator) as a dependency (instead of direct copying)
 
 ### Demo
 Original demo is here: [DEMO](https://larsjung.de/jquery-qrcode/latest/demo/) 
@@ -22,5 +22,3 @@ Run `npm run build`.
 Dist script will be in the `dist/` folder.
 
 [license-img]: https://img.shields.io/badge/license-MIT-a0a060.svg?style=flat-square
-[qrcode]: https://github.com/kazuhikoarase/qrcode-generator
-[qrcode-generator]: https://github.com/kazuhikoarase/qrcode-generator
