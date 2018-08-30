@@ -378,4 +378,13 @@ export default class QRCode {
 
         return this.createDiv(settings);
     }
+
+    /**
+     * Return image Data URI of generated QR code
+     * @param settings
+     * @returns {string}
+     */
+    getDataURI(settings) {
+        return this.createCanvas(settings).toDataURL('image/png');
+    }
 }

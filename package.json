@@ -1,7 +1,7 @@
 {
   "name": "nojquery-qrcode",
   "displayName": "nojquery-qrcode",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate QR codes dynamically.",
   "homepage": "https://github.com/Deliaz/nojquery-qrcode",
   "author": "Deliaz",
@@ -24,6 +24,6 @@
     "node": ">=6.0.0"
   },
   "dependencies": {
-    "qrcode-generator": "^1.2.0"
+    "qrcode-generator": "^1.4.0"
   }
 }
